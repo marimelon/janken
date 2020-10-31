@@ -18,7 +18,7 @@ import oit.is.z0282.kaizi.janken.model.UserMapper;
 import oit.is.z0282.kaizi.janken.model.MatchMapper;
 
 @Controller
-@RequestMapping("/lec02")
+@RequestMapping
 public class Lec02Controller {
 
   @Autowired
@@ -27,8 +27,8 @@ public class Lec02Controller {
   @Autowired
   MatchMapper matchMapper;
 
-  @GetMapping
-  public String get(@RequestParam(required = false) Optional<String> hand,Principal prin, ModelMap model) {
+  @GetMapping("/lec02")
+  public String lec2_get(@RequestParam(required = false) Optional<String> hand,Principal prin, ModelMap model) {
     hand.ifPresent(val -> {
       Janken janken = new Janken(val);
       model.addAttribute("phand", val);
@@ -45,9 +45,10 @@ public class Lec02Controller {
     return "lec02.html";
   }
 
-  @PostMapping
-  public String post(RedirectAttributes redirectAttributes, @RequestParam String name, ModelMap model) {
-    redirectAttributes.addFlashAttribute("name", name);
-    return "redirect:/lec02";
+  @GetMapping("/match")
+  public String match(@RequestParam int id,Principal prin, ModelMap model) {
+    var opponent = userMapper.selectUserById(id);
+    model.addAttribute("opponent",opponent);
+    return "match.html";
   }
 }

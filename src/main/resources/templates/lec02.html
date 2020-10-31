@@ -14,7 +14,7 @@
 
     <h2>エントリー</h2>
     <p th:if="${users}">
-        <li th:each="user : ${users}">[[${user.name}]]</li>
+        <li th:each="user : ${users}"><a th:href="@{/match(id=${user.id})}">[[${user.name}]]</a></li>
     </p>
 
     <h2>試合結果</h2>
