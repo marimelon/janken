@@ -14,16 +14,22 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import oit.is.z0282.kaizi.janken.model.Janken;
 import oit.is.z0282.kaizi.janken.model.Entry;
+import oit.is.z0282.kaizi.janken.model.UserMapper;
+import oit.is.z0282.kaizi.janken.model.MatchMapper;
+import oit.is.z0282.kaizi.janken.model.Match;
 
 @Controller
-@RequestMapping("/lec02")
+@RequestMapping
 public class Lec02Controller {
 
   @Autowired
-  private Entry entry;
+  UserMapper userMapper;
 
-  @GetMapping
-  public String get(@RequestParam(required = false) Optional<String> hand,Principal prin, ModelMap model) {
+  @Autowired
+  MatchMapper matchMapper;
+
+  @GetMapping("/lec02")
+  public String lec2_get(@RequestParam(required = false) Optional<String> hand, Principal prin, ModelMap model) {
     hand.ifPresent(val -> {
       Janken janken = new Janken(val);
       model.addAttribute("phand", val);
@@ -31,16 +37,41 @@ public class Lec02Controller {
       model.addAttribute("result", janken.getResult());
     });
 
-    String loginUser = prin.getName();
-    this.entry.addUser(loginUser);
-    model.addAttribute("entry", this.entry);
+    var users = userMapper.selectAllUsers();
+    model.addAttribute("users", users);
+
+    var matches = matchMapper.selectAllMatches();
+    model.addAttribute("matches", matches);
 
     return "lec02.html";
   }
 
-  @PostMapping
-  public String post(RedirectAttributes redirectAttributes, @RequestParam String name, ModelMap model) {
-    redirectAttributes.addFlashAttribute("name", name);
-    return "redirect:/lec02";
+  @GetMapping("/match")
+  public String match(@RequestParam int id, Principal prin, ModelMap model) {
+    var opponent = userMapper.selectUserById(id);
+    model.addAttribute("opponent", opponent);
+    return "match.html";
+  }
+
+  @GetMapping("/result")
+  public String result(@RequestParam int id, @RequestParam String hand, Principal prin, ModelMap model) {
+    var user = userMapper.selectUsersByName(prin.getName()).get(0);
+
+    var opponent = userMapper.selectUserById(id);
+    model.addAttribute("opponent", opponent);
+
+    Janken janken = new Janken(hand);
+    model.addAttribute("phand", hand);
+    model.addAttribute("chand", janken.getCpuHand());
+    model.addAttribute("result", janken.getResult());
+
+    var match = new Match();
+    match.setUser_1(user.getId());
+    match.setUser_2(opponent.getId());
+    match.setUser_1_hand(hand);
+    match.setUser_2_hand(janken.getCpuHand());
+    matchMapper.insertChamber(match);
+
+    return "match.html";
   }
 }
