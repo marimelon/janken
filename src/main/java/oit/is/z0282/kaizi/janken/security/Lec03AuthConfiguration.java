@@ -23,7 +23,7 @@ public class Lec03AuthConfiguration extends WebSecurityConfigurerAdapter {
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
     // $ sshrun htpasswd -nbBC 10 user1 pAssw0rd
-    auth.inMemoryAuthentication().withUser("user1")
+    auth.inMemoryAuthentication().withUser("ほんだ")
         .password("$2y$10$rJ9yqGht2W96MdIJICRQQOuUiYrt2eDokKnDuZZof2DPs83PN6QdC").roles("USER");
     auth.inMemoryAuthentication().withUser("admin")
         .password("$2y$10$rJ9yqGht2W96MdIJICRQQOuUiYrt2eDokKnDuZZof2DPs83PN6QdC").roles("ADMIN");
