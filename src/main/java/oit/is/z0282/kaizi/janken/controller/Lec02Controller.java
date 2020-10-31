@@ -14,13 +14,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import oit.is.z0282.kaizi.janken.model.Janken;
 import oit.is.z0282.kaizi.janken.model.Entry;
+import oit.is.z0282.kaizi.janken.model.UserMapper;
 
 @Controller
 @RequestMapping("/lec02")
 public class Lec02Controller {
 
   @Autowired
-  private Entry entry;
+  UserMapper userMapper;
 
   @GetMapping
   public String get(@RequestParam(required = false) Optional<String> hand,Principal prin, ModelMap model) {
@@ -31,9 +32,8 @@ public class Lec02Controller {
       model.addAttribute("result", janken.getResult());
     });
 
-    String loginUser = prin.getName();
-    this.entry.addUser(loginUser);
-    model.addAttribute("entry", this.entry);
+    var users = userMapper.selectAllUsers();
+    model.addAttribute("users", users);
 
     return "lec02.html";
   }

@@ -12,17 +12,20 @@
     Hi <div sec:authentication="name" style="display: inline;"></div>
     <br>
 
-    エントリー
-    <li th:each="user : ${entry.users}">[[${user}]]</li>
-
-    <a href="./lec02?hand=Gu">ぐー</a>
+    <h2>エントリー</h2>
+    <p th:if="${users}">
+        <li th:each="user : ${users}">[[${user.name}]]</li>
+    </p>
+    
+    <!-- <a href="./lec02?hand=Gu">ぐー</a>
     <a href="./lec02?hand=Choki">ちょき</a>
     <a href="./lec02?hand=Pa">ぱー</a>
     <div th:if="${phand}">
         あなたの手 [[${phand}]]<br>
         相手の手 [[${chand}]]<br>
         結果 [[${result}]]
-    </div>
+    </div> -->
+
 </body>
 
 </html>
