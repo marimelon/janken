@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import oit.is.z0282.kaizi.janken.model.Janken;
 import oit.is.z0282.kaizi.janken.model.Entry;
 import oit.is.z0282.kaizi.janken.model.UserMapper;
+import oit.is.z0282.kaizi.janken.model.MatchMapper;
 
 @Controller
 @RequestMapping("/lec02")
@@ -22,6 +23,9 @@ public class Lec02Controller {
 
   @Autowired
   UserMapper userMapper;
+
+  @Autowired
+  MatchMapper matchMapper;
 
   @GetMapping
   public String get(@RequestParam(required = false) Optional<String> hand,Principal prin, ModelMap model) {
@@ -34,6 +38,9 @@ public class Lec02Controller {
 
     var users = userMapper.selectAllUsers();
     model.addAttribute("users", users);
+
+    var matches = matchMapper.selectAllMatches();
+    model.addAttribute("matches",matches);
 
     return "lec02.html";
   }
