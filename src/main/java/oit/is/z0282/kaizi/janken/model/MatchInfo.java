@@ -30,7 +30,7 @@ public class MatchInfo {
         this.user_2 = user_2;
     }
 
-    public boolean isIs_active() {
+    public boolean getIs_active() {
         return is_active;
     }
 
