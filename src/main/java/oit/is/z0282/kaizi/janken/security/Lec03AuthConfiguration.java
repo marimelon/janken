@@ -25,6 +25,8 @@ public class Lec03AuthConfiguration extends WebSecurityConfigurerAdapter {
     // $ sshrun htpasswd -nbBC 10 user1 pAssw0rd
     auth.inMemoryAuthentication().withUser("ほんだ")
         .password("$2y$10$rJ9yqGht2W96MdIJICRQQOuUiYrt2eDokKnDuZZof2DPs83PN6QdC").roles("USER");
+    auth.inMemoryAuthentication().withUser("いがき")
+        .password("$2y$10$rJ9yqGht2W96MdIJICRQQOuUiYrt2eDokKnDuZZof2DPs83PN6QdC").roles("USER");
     auth.inMemoryAuthentication().withUser("admin")
         .password("$2y$10$rJ9yqGht2W96MdIJICRQQOuUiYrt2eDokKnDuZZof2DPs83PN6QdC").roles("ADMIN");
   }

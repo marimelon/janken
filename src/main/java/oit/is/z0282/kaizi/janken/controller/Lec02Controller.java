@@ -11,12 +11,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import oit.is.z0282.kaizi.janken.model.Janken;
 import oit.is.z0282.kaizi.janken.model.Entry;
 import oit.is.z0282.kaizi.janken.model.UserMapper;
 import oit.is.z0282.kaizi.janken.model.MatchMapper;
 import oit.is.z0282.kaizi.janken.model.Match;
+import oit.is.z0282.kaizi.janken.model.MatchInfoMapper;
+import oit.is.z0282.kaizi.janken.model.MatchInfo;
+
+import oit.is.z0282.kaizi.janken.service.AsyncKekka;
 
 @Controller
 @RequestMapping
@@ -27,6 +32,12 @@ public class Lec02Controller {
 
   @Autowired
   MatchMapper matchMapper;
+
+  @Autowired
+  MatchInfoMapper matchInfoMapper;
+
+  @Autowired
+  AsyncKekka asyncKekka;
 
   @GetMapping("/lec02")
   public String lec2_get(@RequestParam(required = false) Optional<String> hand, Principal prin, ModelMap model) {
@@ -48,8 +59,17 @@ public class Lec02Controller {
 
   @GetMapping("/match")
   public String match(@RequestParam int id, Principal prin, ModelMap model) {
+    var user = userMapper.selectUsersByName(prin.getName()).get(0);
+
     var opponent = userMapper.selectUserById(id);
     model.addAttribute("opponent", opponent);
+
+    var match_info = new MatchInfo();
+    match_info.setUser_1(user.getId());
+    match_info.setUser_2(opponent.getId());
+    match_info.setIs_active(true);
+    matchInfoMapper.insertMatchInfo(match_info);
+
     return "match.html";
   }
 
@@ -73,5 +93,22 @@ public class Lec02Controller {
     matchMapper.insertChamber(match);
 
     return "match.html";
+  }
+
+  @GetMapping("/wait")
+  public String wait(@RequestParam int id, @RequestParam String hand, Principal prin, ModelMap model) {  
+    var opponent = userMapper.selectUserById(id);
+    model.addAttribute("opponent", opponent);
+    
+    return "wait.html";
+  }
+
+  @GetMapping("check")
+  public SseEmitter check(@RequestParam int id, Principal prin) {
+    var user = userMapper.selectUsersByName(prin.getName()).get(0);
+
+    final SseEmitter sseEmitter = new SseEmitter();
+    this.asyncKekka.asyncGetIsActive(sseEmitter, user.getId(),id);
+    return sseEmitter;
   }
 }

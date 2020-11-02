@@ -13,15 +13,15 @@
         <div sec:authentication="name" style="display: inline;"></div> V.S. [[${opponent.name}]]
     </h2>
 
-    <a th:href="@{./result(id=${opponent.id},hand=Gu)}">ぐー</a>
-    <a th:href="@{./result(id=${opponent.id},hand=Choki)}">ちょき</a>
-    <a th:href="@{./result(id=${opponent.id},hand=Pa)}">ぱー</a>
+    <a th:href="@{./wait(id=${opponent.id},hand=Gu)}">ぐー</a>
+    <a th:href="@{./wait(id=${opponent.id},hand=Choki)}">ちょき</a>
+    <a th:href="@{./wait(id=${opponent.id},hand=Pa)}">ぱー</a>
     <div th:if="${phand}">
         あなたの手 [[${phand}]]<br>
         相手の手 [[${chand}]]<br>
         結果 [[${result}]]
     </div>
-
+    <br>
     <a href="/lec02">もどる</a>
 </body>
 
